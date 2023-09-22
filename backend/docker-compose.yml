@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+    db:
+      image: postgres:15.0-alpine
+      hostname: db
+      container_name: cherry-api-db
+      ports:
+        - 5432:5432
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+
+    api:
+      container_name: "cherry-api"
+      build:
+        context: ./
+        dockerfile: Dockerfile
+      env_file: ".local.env"
+      ports:
+          - "8000:8000"
+      volumes:
+        - .:/app
+      depends_on:
+         - db
+
+volumes:
+  postgres_data:
+
